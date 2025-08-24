@@ -1,0 +1,6 @@
+@QueueOrderHub.Apis_HostAddress = http://localhost:5274
+
+GET {{QueueOrderHub.Apis_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
