@@ -11,8 +11,4 @@
     <ProjectReference Include="..\QueueOrderHub.Shared\QueueOrderHub.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
-
 </Project>

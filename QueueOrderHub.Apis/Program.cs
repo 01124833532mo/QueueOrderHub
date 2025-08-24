@@ -1,5 +1,6 @@
 
 using QueueOrderHub.Apis.Controllers;
+using QueueOrderHub.Core.Application;
 using QueueOrderHub.Infrastructure;
 
 namespace QueueOrderHub.Apis
@@ -17,6 +18,7 @@ namespace QueueOrderHub.Apis
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 
