@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QueueOrderHub.Core.Domain\QueueOrderHub.Core.Domain.csproj" />
     <ProjectReference Include="..\QueueOrderHub.Shared\QueueOrderHub.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Service\" />
   </ItemGroup>
 
 </Project>
