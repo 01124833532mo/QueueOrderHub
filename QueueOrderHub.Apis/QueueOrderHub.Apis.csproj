@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QueueOrderHub.Apis.Controller\QueueOrderHub.Apis.Controllers.csproj" />
+    <ProjectReference Include="..\QueueOrderHub.Core.Application.Abstraction\QueueOrderHub.Core.Application.Abstraction.csproj" />
+    <ProjectReference Include="..\QueueOrderHub.Core.Application\QueueOrderHub.Core.Application.csproj" />
+    <ProjectReference Include="..\QueueOrderHub.Infrastructure.Persistence\QueueOrderHub.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\QueueOrderHub.Infrastructure\QueueOrderHub.Infrastructure.csproj" />
+    <ProjectReference Include="..\QueueOrderHub.Shared\QueueOrderHub.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
