@@ -1,6 +1,7 @@
 ﻿using QueueOrderHub.Core.Application.Abstraction.Service;
 using QueueOrderHub.Core.Domain.Contracts.Infrastructure;
 using QueueOrderHub.Core.Domain.Models.Orders;
+using QueueOrderHub.Shared.Errors.Models;
 using QueueOrderHub.Shared.Response.Order;
 
 namespace QueueOrderHub.Core.Application.Service
@@ -9,9 +10,9 @@ namespace QueueOrderHub.Core.Application.Service
     {
         public async Task<OrderStatusResponse> CreateOrderAsync(Order Request)
         {
-            if (Request == null)
+            if (Request is null)
             {
-                throw new ArgumentNullException(nameof(Request), "Order request cannot be null.");
+                throw new NotFoundExeption("Order Not Found ", Request.Id);
             }
 
             await orderRepository.StoreOrderStatusAsync(Request);
@@ -31,12 +32,12 @@ namespace QueueOrderHub.Core.Application.Service
         {
             if (orderId == Guid.Empty)
             {
-                throw new ArgumentException("Order ID cannot be empty.", nameof(orderId));
+                throw new BadRequestExeption("Order Id Empty");
             }
             var orderStatus = await orderRepository.GetOrderStatusAsync(orderId);
-            if (orderStatus == null)
+            if (orderStatus is null)
             {
-                return null;
+                throw new NotFoundExeption("Order Not Found with: ", orderId);
             }
             return orderStatus;
         }
