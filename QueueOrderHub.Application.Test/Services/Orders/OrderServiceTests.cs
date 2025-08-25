@@ -2,6 +2,7 @@
 using QueueOrderHub.Core.Application.Service;
 using QueueOrderHub.Core.Domain.Contracts.Infrastructure;
 using QueueOrderHub.Core.Domain.Models.Orders;
+using QueueOrderHub.Shared.Errors.Models;
 using QueueOrderHub.Shared.Response.Order;
 
 namespace QueueOrderHub.Application.Test.Services.Orders
@@ -104,7 +105,7 @@ namespace QueueOrderHub.Application.Test.Services.Orders
             var order = new Order
             {
                 Id = Guid.NewGuid(),
-                CustomerName = "Alice",
+                CustomerName = "mohamed",
                 Product = "Tablet",
                 Quantity = 3,
                 TotalAmount = 299.99m
@@ -120,6 +121,89 @@ namespace QueueOrderHub.Application.Test.Services.Orders
                 o.Id == order.Id)))
                 .MustHaveHappenedOnceExactly();
         }
+        [Fact]
+        public async Task GetOrderStatusAsync_ValidOrderId_CallsRepository()
+        {
+            // Arrange
+            var orderId = Guid.NewGuid();
+            // Act
+            await _orderService.GetOrderStatusAsync(orderId);
+            // Assert
+            A.CallTo(() => _orderRepository.GetOrderStatusAsync(orderId)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CreateOrderAsync_RepositoryThrowsException_PropagatesException()
+        {
+            // Arrange
+            var order = new Order
+            {
+                Id = Guid.NewGuid(),
+                CustomerName = "alaaa",
+                Product = "Monitor",
+                Quantity = 1,
+                TotalAmount = 199.99m
+            };
+            A.CallTo(() => _orderRepository.StoreOrderStatusAsync(A<Order>.Ignored))
+                .Throws(new Exception("Database error"));
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _orderService.CreateOrderAsync(order));
+        }
+        [Fact]
+        public async Task GetOrderStatusAsync_RepositoryThrowsException_PropagatesException()
+        {
+            // Arrange
+            var orderId = Guid.NewGuid();
+            A.CallTo(() => _orderRepository.GetOrderStatusAsync(orderId))
+                .Throws(new Exception("Database error"));
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(() => _orderService.GetOrderStatusAsync(orderId));
+        }
+        [Fact]
+        public async Task CreateOrderAsync_OrderWithSpecialCharacters_HandlesCorrectly()
+        {
+            // Arrange
+            var orderId = Guid.NewGuid();
+            var createOrderDto = new Order
+            {
+                Id = orderId,
+                CustomerName = "ahmed",
+                Product = "laptop",
+                Quantity = 1,
+                TotalAmount = 1099.99m
+            };
+            A.CallTo(() => _orderRepository.StoreOrderStatusAsync(A<Order>.Ignored))
+                .Returns(Task.CompletedTask);
+            // Act
+            var result = await _orderService.CreateOrderAsync(createOrderDto);
+            // Assert
+            Assert.NotNull(result);
+            Assert.IsType<OrderStatusResponse>(result);
+            Assert.Equal(orderId, result.OrderId);
+            A.CallTo(() => _orderRepository.StoreOrderStatusAsync(A<Order>.That.Matches(o =>
+                o.CustomerName == createOrderDto.CustomerName &&
+                o.Product == createOrderDto.Product &&
+                o.Quantity == createOrderDto.Quantity &&
+                o.TotalAmount == createOrderDto.TotalAmount &&
+                o.Id == createOrderDto.Id)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+
+        [Fact]
+        public async Task GetOrderStatusAsync_NonExistentOrderId_ReturnsNull()
+        {
+            // Arrange
+            var nonExistentOrderId = Guid.NewGuid();
+            A.CallTo(() => _orderRepository.GetOrderStatusAsync(nonExistentOrderId))
+                .Returns(Task.FromResult<OrderStatusResponse?>(null));
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundExeption>(() => _orderService.GetOrderStatusAsync(nonExistentOrderId));
+            A.CallTo(() => _orderRepository.GetOrderStatusAsync(nonExistentOrderId)).MustHaveHappenedOnceExactly();
+        }
+
+
+
 
 
     }
