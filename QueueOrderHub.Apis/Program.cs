@@ -1,5 +1,5 @@
-
-using QueueOrderHub.Apis.Controllers;
+using QueueOrderHub.Apis.Extinsions;
+using QueueOrderHub.Apis.MiddleWares;
 using QueueOrderHub.Core.Application;
 using QueueOrderHub.Infrastructure;
 
@@ -13,14 +13,19 @@ namespace QueueOrderHub.Apis
 
             // Add services to the container.
 
-            builder.Services.AddControllers().AddApplicationPart(typeof(AssemblyInformation).Assembly);
+
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.RegesteredPresestantLayer();
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
 
             var app = builder.Build();
+            app.UseMiddleware<ExeptionHandlerMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -30,6 +35,9 @@ namespace QueueOrderHub.Apis
             }
 
             app.UseHttpsRedirection();
+            app.UseStatusCodePagesWithReExecute("/Errors/{0}");
+            app.UseStaticFiles();
+
 
             app.UseAuthorization();
 
