@@ -28,6 +28,7 @@ namespace QueueOrderHub.Infrastructure
 
             services.AddSingleton(typeof(IOrderRepository), typeof(OrderRepository));
             services.AddSingleton(typeof(IRabbitMQService), typeof(RabbitMQService));
+            services.AddScoped(typeof(OrderProcessingJobs));
 
             return services;
 
