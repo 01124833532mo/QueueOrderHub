@@ -28,9 +28,16 @@ namespace QueueOrderHub.Core.Application.Service
                 TotalAmount = Request.TotalAmount,
                 CreatedAt = Request.CreatedAt
             };
+            try
+            {
 
-            rabbitMQService.PublishOrder(orderMessage);
+                rabbitMQService.PublishOrder(orderMessage);
 
+            }
+            catch (Exception ex)
+            {
+                throw new BadRequestExeption($"RabbitMq Faild To Push Message And Details :{ex.Message} ");
+            }
 
 
 

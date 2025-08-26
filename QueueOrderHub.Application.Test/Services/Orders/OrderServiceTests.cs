@@ -10,13 +10,14 @@ namespace QueueOrderHub.Application.Test.Services.Orders
     public class OrderServiceTests
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IRabbitMQService _rabbitmqservice;
         private readonly OrderService _orderService;
 
         public OrderServiceTests()
         {
             _orderRepository = A.Fake<IOrderRepository>();
 
-            _orderService = new OrderService(_orderRepository);
+            _orderService = new OrderService(_orderRepository, _rabbitmqservice);
         }
         [Fact]
         public async Task CreateOrderAsync_ValidInput_ReturnsOrderId()
