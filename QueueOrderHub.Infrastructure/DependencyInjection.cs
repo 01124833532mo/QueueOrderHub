@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QueueOrderHub.Core.Domain.Contracts.Infrastructure;
-using QueueOrderHub.Infrastructure.Services;
+using QueueOrderHub.Infrastructure.Services.Infrastructure;
+using QueueOrderHub.Infrastructure.Services.Orders;
 using QueueOrderHub.Shared.ModelSettings;
 using StackExchange.Redis;
 namespace QueueOrderHub.Infrastructure
@@ -26,6 +27,7 @@ namespace QueueOrderHub.Infrastructure
 
 
             services.AddSingleton(typeof(IOrderRepository), typeof(OrderRepository));
+            services.AddSingleton(typeof(IRabbitMQService), typeof(RabbitMQService));
 
             return services;
 

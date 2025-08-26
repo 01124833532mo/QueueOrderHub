@@ -3,7 +3,7 @@ using QueueOrderHub.Shared.Response.Order;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace QueueOrderHub.Infrastructure.Services
+namespace QueueOrderHub.Infrastructure.Services.Orders
 {
     public class OrderRepository : IOrderRepository
     {
