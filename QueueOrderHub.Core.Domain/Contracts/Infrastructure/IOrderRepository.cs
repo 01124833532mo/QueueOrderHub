@@ -8,5 +8,6 @@ namespace QueueOrderHub.Core.Domain.Contracts.Infrastructure
 
         Task StoreOrderStatusAsync(Order order);
         Task<OrderStatusResponse?> GetOrderStatusAsync(Guid orderId);
+        Task UpdateOrderStatusAsync(Order order);
     }
 }

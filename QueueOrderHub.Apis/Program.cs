@@ -1,7 +1,9 @@
+using Hangfire;
 using QueueOrderHub.Apis.Extinsions;
 using QueueOrderHub.Apis.MiddleWares;
 using QueueOrderHub.Core.Application;
 using QueueOrderHub.Infrastructure;
+using QueueOrderHub.Shared;
 
 namespace QueueOrderHub.Apis
 {
@@ -23,6 +25,7 @@ namespace QueueOrderHub.Apis
             builder.Services.AddSwaggerGen();
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
+            builder.Services.AddSharedDependency(builder.Configuration);
 
             var app = builder.Build();
             app.UseMiddleware<ExeptionHandlerMiddleware>();
@@ -37,6 +40,9 @@ namespace QueueOrderHub.Apis
             app.UseHttpsRedirection();
             app.UseStatusCodePagesWithReExecute("/Errors/{0}");
             app.UseStaticFiles();
+
+            app.MapHangfireDashboard("/Dashbord");
+
 
 
             app.UseAuthorization();

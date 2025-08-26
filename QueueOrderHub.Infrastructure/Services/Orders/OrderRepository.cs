@@ -1,9 +1,10 @@
 ﻿using QueueOrderHub.Core.Domain.Contracts.Infrastructure;
+using QueueOrderHub.Shared.Errors.Models;
 using QueueOrderHub.Shared.Response.Order;
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace QueueOrderHub.Infrastructure.Services
+namespace QueueOrderHub.Infrastructure.Services.Orders
 {
     public class OrderRepository : IOrderRepository
     {
@@ -40,6 +41,21 @@ namespace QueueOrderHub.Infrastructure.Services
                 return null;
 
             return JsonSerializer.Deserialize<OrderStatusResponse>(serializedStatus!);
+        }
+
+        public async Task UpdateOrderStatusAsync(Core.Domain.Models.Orders.Order order)
+        {
+            var existingStatus = await GetOrderStatusAsync(order.Id);
+            if (existingStatus is null)
+            {
+                throw new NotFoundExeption($"Order with ID  not found.", order.Id);
+            }
+
+            existingStatus.Status = order.Status;
+            var serializedStatus = JsonSerializer.Serialize(existingStatus);
+            await _redisDb.StringSetAsync($"order:{order.Id}", serializedStatus, TimeSpan.FromHours(24));
+
+
         }
     }
 }
